@@ -21,3 +21,6 @@ src/client/test.py
 cqhttp
 .idea/
 .DS_Store
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+.vs/yobot-CBD/v16/.suo

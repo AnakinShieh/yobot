@@ -532,7 +532,8 @@ class ClanBattle:
         last_challenge = self._get_group_previous_challenge(group)
         if last_challenge is None:
             raise GroupError('本群无出刀记录')
-        if (last_challenge.qqid != qqid) and (user.authority_group >= 100):
+        # 8.1 修改，允许代刀人撤销报刀记录
+        if (last_challenge.qqid != qqid) and (last_challenge.behalf!=qqid) and (user.authority_group >= 100):
             raise UserError('无权撤销')
         group.boss_cycle = last_challenge.boss_cycle
         group.boss_num = last_challenge.boss_num

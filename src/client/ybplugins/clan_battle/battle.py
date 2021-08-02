@@ -1511,7 +1511,8 @@ class ClanBattle:
             _logger.info('群聊 成功 {} {} {}'.format(user_id, group_id, cmd))
             return '预约成功'
         elif match_num == 11:  # 挂树
-            match = re.match(r'^挂树 *(?:[\:：](.*))?$', cmd)
+            match = re.match(
+                r'^挂树 *(?:[\:：](.*))?(?:\[CQ:at,qq=(\d+)\])? *$', cmd)
             if not match:
                 return
             # Aug 2 允许代挂树

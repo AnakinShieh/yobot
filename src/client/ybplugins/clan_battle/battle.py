@@ -1514,18 +1514,21 @@ class ClanBattle:
             match = re.match(r'^挂树 *(?:[\:：](.*))?$', cmd)
             if not match:
                 return
+            # Aug 2 允许代挂树
             extra_msg = match.group(1)
+            tid = int(match.group(2)) if match.group(
+                2) is not None else user_id
             if isinstance(extra_msg, str):
                 extra_msg = extra_msg.strip()
                 if not extra_msg:
                     extra_msg = None
             try:
-                self.add_subscribe(group_id, user_id, 0, extra_msg)
+                self.add_subscribe(group_id, tid, 0, extra_msg)
             except ClanBattleError as e:
-                _logger.info('群聊 失败 {} {} {}'.format(user_id, group_id, cmd))
+                _logger.info('群聊 失败 {} {} {}'.format(tid, group_id, cmd))
                 return str(e)
-            _logger.info('群聊 成功 {} {} {}'.format(user_id, group_id, cmd))
-            return '已挂树'
+            _logger.info('群聊 成功 {} {} {}'.format(tid, group_id, cmd))
+            return f'[CQ:at,qq={tid}]已挂树'
         elif match_num == 12:  # 申请/锁定
             if cmd == '申请出刀':
                 appli_type = 1
@@ -1553,22 +1556,25 @@ class ClanBattle:
             _logger.info('群聊 成功 {} {} {}'.format(user_id, group_id, cmd))
             return str(boss_status)
         elif match_num == 13:  # 取消
-            match = re.match(r'^取消(?:预约)?([1-5]|挂树)$', cmd)
+            match = re.match(
+                r'^取消(?:预约)?([1-5]|挂树) *(?:\[CQ:at,qq=(\d+)\])? *$', cmd)
             if not match:
                 return
             b = match.group(1)
+            tid = int(match.group(2)) if match.group(
+                2) is not None else user_id
             if b == '挂树':
                 boss_num = 0
                 event = b
             else:
                 boss_num = int(b)
                 event = f'预约{b}号boss'
-            counts = self.cancel_subscribe(group_id, user_id, boss_num)
+            counts = self.cancel_subscribe(group_id, tid, boss_num)
             if counts == 0:
-                _logger.info('群聊 失败 {} {} {}'.format(user_id, group_id, cmd))
-                return '您没有'+event
-            _logger.info('群聊 成功 {} {} {}'.format(user_id, group_id, cmd))
-            return '已取消'+event
+                _logger.info('群聊 失败 {} {} {}'.format(tid, group_id, cmd))
+                return f'[CQ:at,qq={tid}]您没有'+event
+            _logger.info('群聊 成功 {} {} {}'.format(tid, group_id, cmd))
+            return f'[CQ:at,qq={tid}]已取消'+event
         elif match_num == 26:  # 强制取消
             match = re.match(
                 r'^强制取消(?:预约)?([1-5])? *(?:\[CQ:at,qq=(\d+)\])? *$', cmd)

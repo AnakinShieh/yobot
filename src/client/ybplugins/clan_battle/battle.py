@@ -1512,13 +1512,13 @@ class ClanBattle:
             return '预约成功'
         elif match_num == 11:  # 挂树
             match = re.match(
-                r'^挂树 *(?:[\:：](.*))?(?:\[CQ:at,qq=(\d+)\])? *$', cmd)
+                r'^挂树 *(?:\[CQ:at,qq=(\d+)\])? *(?:[\:：](.*))?$', cmd)
             if not match:
                 return
             # Aug 2 允许代挂树
-            extra_msg = match.group(1)
-            tid = int(match.group(2)) if match.group(
-                2) is not None else user_id
+            extra_msg = match.group(2)
+            tid = int(match.group(1)) if match.group(
+                1) is not None else user_id
             if isinstance(extra_msg, str):
                 extra_msg = extra_msg.strip()
                 if not extra_msg:
